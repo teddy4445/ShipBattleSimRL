@@ -7,43 +7,38 @@ class Ship {
         this.team = team;
         this.position = this.p.createVector(x, y); // Use instance 'p' for instance methods
 
-        // FIX: Initialize with random velocity using global p5.Vector
-        this.velocity = p5.Vector.random2D().mult(this.p.random(0.5, 1.5));
+        this.velocity = this.p.createVector(0, 0);
         this.acceleration = this.p.createVector(0, 0); // Use instance 'p'
-
+		
+		// TODO: would be cool to play with these values
         this.maxSpeed = 2;
         this.maxForce = 0.15;
         this.size = 11;
-        this.visionRadius = 100;     // Correct vision range
-        this.firingRange = 75;      // FIX: Updated firing range
+        this.visionRadius = 100;     
+        this.firingRange = 75;      
         this.life = 3;
-        this.ammo = 10;             // Correct starting ammo
+        this.ammo = 10;             
         this.fireCooldown = 0;
-        this.maxFireCooldown = 30;  // Cooldown frames (Adjust as needed, e.g., 60 = 1 sec)
-        this.fireChance = 0.08;     // ADD: Chance to fire per frame if target available
+        this.maxFireCooldown = 30;  
+        this.fireChance = 0.08;  // TODO: remove, just for the demo, the DRL should make this decision
 
         this.collisionDamageCooldown = 0;
         this.maxCollisionDamageCooldown = 30; // 0.5 seconds cooldown for collision hits
-
+		
+		// TODO: remove, just for the demo, the DRL should make this decision
         // Wander parameters (same)
         this.wanderTheta = this.p.random(this.p.TWO_PI);
         this.wanderRadius = 10;
         this.wanderDistance = 20;
         this.wanderChange = 0.3;
 
-        // Colors (same)
         this.hullColor = (team === 'blue') ? this.p.color(0, 80, 200) : this.p.color(200, 40, 40);
         this.cabinColor = (team === 'blue') ? this.p.color(100, 150, 255) : this.p.color(255, 100, 100);
         this.detailColor = this.p.color(100); // Grey details
         this.strokeColor = this.p.color(40);
 
-        // ADD: Combat related state
         this.currentTarget = null; // Store the ship being targeted
         this.lastShotFired = 0; // Track when last shot was fired (for visualization)
-
-        // REMOVE/REPLACE these if not needed, currentTarget used instead
-        // this.target = null;
-        // this.state = {};
 		
         this.timeOfDeath = null;        // Timestamp when life reached 0
         this.markedForRemoval = false;  // Flag to signal removal in the next game loop iteration
@@ -58,7 +53,6 @@ class Ship {
     }
 
     // --- Steering Behaviors ---
-    // wander, avoid, separate, applySteering remain the same as provided in the previous code block
     wander() {
         let circlePos = this.velocity.copy().normalize().mult(this.wanderDistance).add(this.position);
         this.wanderTheta += this.p.random(-this.wanderChange, this.wanderChange);
@@ -135,8 +129,6 @@ class Ship {
        this.applyForce(separationForce);
     }
 
-
-    // --- Updated takeHit ---
     takeHit(damageSource = 'projectile') {
         if (this.isDead()) return; // Already dead, do nothing
 
@@ -162,8 +154,6 @@ class Ship {
         }
     }
 
-
-    // --- ADD: Combat Logic ---
     findAndEngageTarget(allShips) {
         if (this.isDead() || this.ammo <= 0 || this.fireCooldown > 0) {
             this.currentTarget = null; // Cannot engage
@@ -207,7 +197,6 @@ class Ship {
         }
     }
 
-    // --- ADD: Fire Method ---
     fire(target, distance) {
         if (this.ammo <= 0 || this.fireCooldown > 0 || this.isDead() || target.isDead()) {
             return false;
@@ -231,8 +220,6 @@ class Ship {
         }
     }
 
-
-    // --- Update Method (Integrate Combat and Cooldowns) ---
     update(islands, allShips, mapWidth, mapHeight, baseWidth) {
         if (this.isDead()) {
             this.velocity.mult(0.9);
@@ -267,7 +254,6 @@ class Ship {
 
     }
 
-    // --- ADD: Helper Methods ---
     checkAndEnforceBoundaries(nextPos, mapWidth, mapHeight, baseWidth) {
         let boundaryHit = false;
         let effectiveRadius = this.size * 0.8;
@@ -305,7 +291,6 @@ class Ship {
         });
     }
 
-    // --- Display Method (Add Visualizations) ---
     display() {
         // Color setup and fade for dead ships (same as before)
         let currentHullColor = this.p.color(this.hullColor);
@@ -372,7 +357,6 @@ class Ship {
         }
     }
 
-    // Helper for drawing health bar (same as before)
     displayHealthBar(shipSize) {
         let s = shipSize;
         let healthRatio = this.life / 3;
@@ -385,4 +369,4 @@ class Ship {
         this.p.rect(barX, barY, barW * healthRatio, barH, 2);
     }
 
-} // End of Ship Class
+} 

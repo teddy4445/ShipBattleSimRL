@@ -8,8 +8,8 @@ let shipsRed = [];
 let allShips = []; // Combined array for easier processing
 let islands = [];
 let gameConfig = {};
-let mapWidth = 800;
-let mapHeight = 400;
+let mapWidth = 1000;
+let mapHeight = 600;
 let baseWidth = 50;
 let gameOver = false;
 let winner = null;
@@ -90,12 +90,6 @@ const sketch = (p) => {
 
         // --- Check Game Over Condition ---
         checkGameOver();
-
-        // --- Update Stats Panel ---
-        // Update stats if ships were removed OR on the regular interval
-        if (shipsWereRemoved || p.frameCount % 15 === 0) {
-             updateStatsDisplay();
-        }
     };
 
     // --- Helper Functions within the sketch ---
@@ -159,7 +153,6 @@ const sketch = (p) => {
         allShips = [...shipsBlue, ...shipsRed]; // Initial combined list
 
         console.log(`Game Initialized: ${shipsBlue.length} Blue, ${shipsRed.length} Red, ${islands.length} Islands.`);
-        updateStatsDisplay(); // Initial stats display
     };
 
      // Function to handle ship-vs-ship collisions and apply damage
@@ -204,19 +197,19 @@ const sketch = (p) => {
             winner = 'Red';
             console.log("Game Over: Red Wins!");
             p.noLoop(); // Stop draw loop on game over
-			displayGameOverOverlay();
+			showGameEndMessage("Red Team Wins!"); 
         } else if (!redAlive && blueAlive) {
             gameOver = true;
             winner = 'Blue';
              console.log("Game Over: Blue Wins!");
             p.noLoop(); // Stop draw loop
-            displayGameOverOverlay(); // Show overlay
+			showGameEndMessage("Blue Team Wins!"); 
         } else if (!redAlive && !blueAlive) {
             gameOver = true;
             winner = 'Draw'; // Or mutual destruction
             console.log("Game Over: Draw!");
             p.noLoop(); // Stop draw loop
-            displayGameOverOverlay(); // Show overlay
+			showGameEndMessage("Draw!"); 
         }
     };
 
@@ -248,46 +241,6 @@ const sketch = (p) => {
         p_instance.text("Select 'New Game Setup' to play again.", mapWidth / 2, mapHeight / 2 + 40);
         p_instance.pop();
     };
-    // Function to display the game over overlay card
-    const displayGameOverOverlay = () => {
-        const gameOverOverlay = document.createElement('div');
-        gameOverOverlay.id = 'game-over-overlay';
-        gameOverOverlay.classList.add('game-over-overlay');
-
-        let message = "";
-        if (winner === 'Draw') {
-            message = "Mutual Destruction!";
-        } else {
-            message = `${winner} Team Wins!`;
-        }
-
-        gameOverOverlay.innerHTML = `
-            <div class="card shadow-lg p-3 bg-white rounded text-center">
-                <h2 class="card-title">${message}</h2>
-                <div class="d-grid gap-2">
-                    <button id="btn-reset-game" class="btn btn-success">Reset Game</button>
-                    <button id="btn-menu" class="btn btn-secondary">Main Menu</button>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(gameOverOverlay);
-
-        document.getElementById('btn-reset-game').addEventListener('click', () => {
-            document.body.removeChild(gameOverOverlay);
-            resetGameSketch();
-            p.loop(); // Ensure the draw loop restarts
-        });
-
-        document.getElementById('btn-menu').addEventListener('click', () => {
-            document.body.removeChild(gameOverOverlay);
-            document.getElementById('game-page').style.display = 'none';
-            document.getElementById('training-page').style.display = 'none';
-            document.getElementById('setup-page').style.display = 'block';
-            stopGameVisualization();
-        });
-    };
-
     // Make reset function accessible globally
     window.resetGameSketch = () => {
         if (p) {
@@ -297,6 +250,15 @@ const sketch = (p) => {
     };
 
 }; // End of sketch function definition
+
+// --- Function to show the modal ---
+function showGameEndMessage(message) {
+  // Update the message text
+  gameEndModalLabel.textContent = message; 
+  // Show the modal
+  gameEndModal.style.opacity = 1;
+  gameEndModal.style.display  = "block";
+}
 
 // --- Function to create/destroy the p5 instance ---
 function startGameVisualization(config) {

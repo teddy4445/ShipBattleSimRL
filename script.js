@@ -13,17 +13,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnShowTraining = document.getElementById('btn-show-training');
     const btnRestartSetup = document.getElementById('btn-restart-setup');
     const btnTrainingToSetup = document.getElementById('btn-training-to-setup');
-    const currentDateSpan = document.getElementById('current-date');
 	
     const checkShowVision = document.getElementById('check-show-vision');
     const checkShowFiring = document.getElementById('check-show-firing');
     const checkShowTargetLines = document.getElementById('check-show-target-lines');
 
+	const gameEndModalElement = document.getElementById('gameEndModal');
+	const gameEndModalLabel = document.getElementById('gameEndModalLabel');
+	const resetButtonModal = document.getElementById('btn-reset-game-modal');
+	const menuButtonModal = document.getElementById('btn-menu-modal');
+	
+	const gameEndModal = new bootstrap.Modal(gameEndModalElement); 
 
-    // Display current date in footer
-    if (currentDateSpan) {
-        currentDateSpan.textContent = new Date().toLocaleDateString();
-    }
+	
+	resetButtonModal.addEventListener('click', () => {
+	  gameEndModal.style.opacity = 0; // Hide the modal first
+	  console.log("Reset Game button clicked!");
+	  // TODO: develop this logic
+	});
+
+	menuButtonModal.addEventListener('click', () => {
+	  gameEndModal.style.opacity = 0; // Hide the modal first
+	  console.log("Main Menu button clicked!");
+	  window.location.href = '/';
+	});
+
 
     // --- Page Navigation ---
 
@@ -114,47 +128,3 @@ document.addEventListener('DOMContentLoaded', () => {
     showPage('setup-page'); // Show setup page by default
 
 }); // End DOMContentLoaded
-
-// --- Stats Panel Update Function (called from game.js) ---
-function updateStatsDisplay() {
-    const blueStatsDiv = document.getElementById('blue-stats');
-    const redStatsDiv = document.getElementById('red-stats');
-
-    if (!blueStatsDiv || !redStatsDiv) return; // Exit if elements not found
-
-    // Function to generate HTML for one team's stats
-    const generateStatsHtml = (teamShips, teamName) => {
-        let aliveCount = 0;
-        let totalHealth = 0;
-        // let totalAmmo = 0; // Ammo not used currently
-        let listHtml = '<ul>';
-
-        teamShips.forEach(ship => {
-            const isDead = ship.isDead();
-            if (!isDead) {
-                aliveCount++;
-                totalHealth += ship.life;
-                // totalAmmo += ship.ammo;
-            }
-            // Use template literal for cleaner HTML string construction
-            listHtml += `
-                <li class="ship-stat ${isDead ? 'dead' : ''}">
-                    <strong>${ship.id}:</strong> Health: ${ship.life} / 3
-                    ${isDead ? ' (Destroyed)' : ''}
-                </li>`;
-        });
-        listHtml += '</ul>';
-
-        return `
-            <p><strong>Ships Active:</strong> ${aliveCount} / ${teamShips.length}</p>
-            <p class="mb-2"><strong>Total Fleet Health:</strong> ${totalHealth}</p>
-            ${listHtml}
-        `;
-    };
-
-    // Update Blue Team Stats
-    blueStatsDiv.innerHTML = generateStatsHtml(shipsBlue, 'Blue');
-
-    // Update Red Team Stats
-    redStatsDiv.innerHTML = generateStatsHtml(shipsRed, 'Red');
-}

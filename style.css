@@ -1,18 +1,18 @@
-/* Add any custom styles if needed, though Bootstrap covers most */
+
 body {
-    padding-bottom: 60px; /* Ensure footer doesn't overlap content */
+    padding-bottom: 60px; 
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
 main {
-    flex: 1; /* Allow main content to grow */
+    flex: 1;
 }
 
 #game-canvas-container {
-    width: 800px;
-    height: 400px;
+    width: 1000px;
+    height: 600px;
     margin: 1rem auto;
     border: 1px solid #ccc;
     position: relative; /* Needed for p5 canvas positioning */
@@ -20,16 +20,6 @@ main {
     overflow: hidden; /* Ensure canvas content doesn't spill */
 }
 
-.base {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 50px;
-    opacity: 0.2;
-    z-index: 0; /* Behind the canvas */
-}
-.base-blue { left: 0; background-color: blue; }
-.base-red { right: 0; background-color: red; }
 
 /* Hide sections initially */
 #game-page, #training-page {
@@ -40,7 +30,7 @@ main {
 .card-body ul {
     list-style-type: none;
     padding-left: 0;
-    margin-bottom: 0; /* Remove default bottom margin */
+    margin-bottom: 0; 
 }
 .card-body li {
      margin-bottom: 0.4rem;
@@ -49,41 +39,28 @@ main {
      border-radius: 4px;
 }
 
-/* Style for indicating dead ships in stats */
 .ship-stat.dead {
     text-decoration: line-through;
     opacity: 0.6;
-    background-color: #f8f9fa; /* Light gray background */
+    background-color: #f8f9fa; 
 }
 .ship-stat:not(.dead) {
-     background-color: #e9f5ff; /* Light blue background for alive */
+     background-color: #e9f5ff;
 }
-/* Different background for red team alive ships */
+
 #red-stats .ship-stat:not(.dead) {
-     background-color: #ffe9e9; /* Light red background */
+     background-color: #ffe9e9;
 }
 
 
 .footer {
-    /* position: fixed; */ /* Optional: Fix footer to bottom */
-    /* bottom: 0; */
-    /* width: 100%; */
     z-index: 10;
 }
 
 #vis-controls {
-    margin-bottom: 0.75rem; /* Add some space below checkboxes */
+    margin-bottom: 0.75rem; 
 }
 
-/* Optional: Style for the circles */
-.debug-circle-vision {
-    /* Handled directly in p5 stroke */
-}
-.debug-circle-firing {
-     /* Handled directly in p5 stroke */
-}
-
-/* Ensure canvas is drawn above base divs */
 #game-canvas-container canvas {
     position: relative;
     z-index: 1;

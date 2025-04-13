@@ -16,15 +16,12 @@ class Island {
 
         for (let i = 0; i < numVertices; i++) {
             let angle = this.p.map(i, 0, numVertices, 0, this.p.TWO_PI);
-            // Vary radius for irregularity - using noise might be smoother
             let r = baseRadius * this.p.random(0.6, 1.4);
-            // let r = baseRadius * (1 + this.p.map(this.p.noise(x * 0.1, y * 0.1, i * 0.5), 0, 1, -0.4, 0.4)); // Noise based variation
 
             let vx = x + r * this.p.cos(angle);
             let vy = y + r * this.p.sin(angle);
             this.vertices.push(this.p.createVector(vx, vy));
 
-            // Update bounding radius
             let distFromCenter = this.p.dist(x, y, vx, vy);
             if (distFromCenter > this.boundingRadius) {
                 this.boundingRadius = distFromCenter;
